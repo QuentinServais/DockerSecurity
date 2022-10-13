@@ -19,7 +19,10 @@ This section will focus solely on ensuring that the host (in this case Linux Ubu
         - no password
         - change default SSH port (22)
     * implement a firewall
+        - iptables-persistent so the rules would still applied after a server reboot
     * implement a fail2ban
+    * Install a malware scanner
+        - clamAV
 3. Kernel security
     * Install and configure SELinux/AppArmor
 4. Snapchot the host configuration

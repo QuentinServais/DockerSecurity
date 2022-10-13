@@ -1,0 +1,62 @@
+# permet de spécifier le type de configuration voulue ici filtrer les paquets
+*filter
+
+# par défaut abandonner les paquets si il n'existe aucune règle qui les acceptent
+:INPUT DROP [0:0]
+:FORWARD DROP [0:0]
+# accepter les paquets sortants
+:OUTPUT ACCEPT [0:0]
+
+# créer deux chaines dont on se servira pour ouvrir les ports du firewall
+:TCP - [0:0]
+:UDP - [0:0]
+
+# prolonger les connexions déja établie
+# -A: ajouter à la chaine
+# -m conntrack: suivre la connexion
+# --ctstate: etat actuel
+# -j: définis ce que l'on fait de la connexion (ou autre chaine)
+-A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+# ne pas filtrer le traffic loopback(localhost)
+# -i: spécifier l'interface
+-A INPUT -i lo -j ACCEPT
+# abandonner tout traffic invalide
+-A INPUT -m conntrack --ctstate INVALID -j DROP
+# accepter les nouvelles requetes ping
+-A INPUT -p icmp --icmp-type 8 -m conntrack --ctstate NEW -j ACCEPT
+# gérer les nouvelles connexions tcp et udp et les attacher respectivement à TCP et UDP. Dans le cas de tcp elles doivent commencer par un syn(3-way handshake)
+-A INPUT -p udp -m conntrack --ctstate NEW -j UDP
+-A INPUT -p tcp --syn -m conntrack --ctstate NEW -j TCP
+# rejetter les connexions tcp reset et udp icmp port non joignable si les ports sont fermés
+# -p: spécifie le protocole
+# --reject-with: spécifie pourquoi la requête a été rejetée
+-A INPUT -p udp -j REJECT --reject-with icmp-port-unreachable
+-A INPUT -p tcp -j REJECT --reject-with tcp-reset
+# rejette tout autre protocole
+-A INPUT -j REJECT --reject-with icmp-proto-unreachable
+
+# TCP chain
+# accepter les connexions SSH
+# -dport: destination port
+-A TCP -p tcp --dport 10220 -j ACCEPT
+# accepter les connexions HTTPS
+# -A TCP -p tcp --dport 443 -j ACCEPT
+# accepter les connexions HTTP
+# -A TCP -p tcp --dport 80 -j ACCEPT
+# accepter les requêtes DNS
+# -A TCP -p tcp --dport 53 -j ACCEPT
+# accepter les requetes VoIP
+# -A TCP -p tcp --dport 5060 -j ACCEPT
+
+# UDP chain
+# accepter les requetes DNS
+# -A UDP -p udp --dport 53 -j ACCEPT
+# accepter les requetes VoIP
+# -A UDP -p udp --dport 5060 -j ACCEPT
+
+# Docker
+-A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+-A FORWARD -i docker0 -o eth0 -j ACCEPT
+-A FORWARD -i eth0 -o docker0 -j ACCEPT
+
+COMMIT
