@@ -21,8 +21,17 @@ This section will focus solely on ensuring that the host (in this case Linux Ubu
     * implement a firewall
         - iptables-persistent so the rules would still applied after a server reboot
     * implement a fail2ban
+        - crate an sshd jail
     * Install a malware scanner
         - clamAV
+    * setup $TMP and $TMPDIR for PAM sessions to prevent attack on temporary files (/tmp) like symlink attacks
+        - sudo apt-get install libpam-tmpdir
+    * Grub password
+        - 
+    * Disable compilers to prevent custom malware to run
+        - sudo apt-get remove binutils && sudo apt-get autoremove && sudo apt-get clean
+    * Disable USB storage
+        - # mv /lib/modules/$(uname -r)/kernel/drivers/usb/storage/usb-storage.ko /home/
 3. Kernel security
     * Install and configure SELinux/AppArmor
 4. Snapchot the host configuration
