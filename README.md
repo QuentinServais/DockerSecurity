@@ -32,7 +32,8 @@ This section will focus solely on ensuring that the host (in this case Linux Ubu
 * Enable Docker Content Trust (DCT). Utilize The Update Framework (TUF) with notary server to prevents user to work with unsigned images.
 
 ## Monitor Containers
-* Fluentd syslog
+* Serveur de log
+   - Fluentd syslog
 
 ## Container security
 1. Run containers with unprivileged user
