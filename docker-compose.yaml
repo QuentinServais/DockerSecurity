@@ -1,4 +1,27 @@
-version: "3"
+version: '3.9'
+
+networks:
+    woodynet:
+        external: true
+
 services:
-  website:
-  image: httpd
+    db:
+        build: ./database
+        container_name: woodysql
+        environment:
+            - MYSQL_DATABASE=${MYSQL_DATABASE}
+            - MYSQL_USER=${MYSQL_USER}
+            - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+        networks:
+            woodynet:
+                ipv4_address: 172.18.0.2
+
+    web:
+        build: ./web
+        container_name: woodyweb
+        ports:
+          - 8080:80
+        networks:
+            woodynet:
+                ipv4_address: 172.18.0.3
