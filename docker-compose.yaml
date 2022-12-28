@@ -16,6 +16,8 @@ services:
         networks:
             woodynet:
                 ipv4_address: 172.18.0.2
+        security_opt:
+            - apparmor=docker-default 
 
     web:
         build: ./web
@@ -25,3 +27,5 @@ services:
         networks:
             woodynet:
                 ipv4_address: 172.18.0.3
+        security_opt:
+            - apparmor=docker-default 
