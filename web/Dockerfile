@@ -4,6 +4,10 @@ FROM php:apache
 # Installation de l'extension PDO qui permet de se connecter à la bdd 
 RUN docker-php-ext-install pdo pdo_mysql
 
+# Installation nano 
+RUN apt -y update
+RUN apt install -y nano
+
 # Copie de la configuration des virtual hosts dans le fichier de configuration des virtualhosts apache
 COPY ./sites_woody.conf/ /etc/apache2/sites-available
 # Copie du site dynamique dans le fichier www d'apache création d'un dossier b2b  
