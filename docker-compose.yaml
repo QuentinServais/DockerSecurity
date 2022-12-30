@@ -1,13 +1,28 @@
-version: '2.2'
-
-networks:
-    woodynet:
-        external: true
+version: '3'
 
 services:
     db:
         build: ./database
+        deploy:
+            resources:
+                limits:
+                    cpus: '1'
+                    memory: 1024M
+                    pids: 100
+                reservations:
+                    cpus: '0.5'
+                    memory: 256M
+            restart_policy:
+                condition: on-failure
+                delay: 3s
+                max_attempts: 5
         container_name: woodysql
+        healthcheck:
+            test: mysqladmin -u$MYSQL_USER -p$MYSQL_ROOT_PASSWORD status || exit 1
+            interval: 60s
+            retries: 1 
+            start_period: 20s
+            timeout: 20s
         environment:
             - MYSQL_DATABASE=${MYSQL_DATABASE}
             - MYSQL_USER=${MYSQL_USER}
@@ -18,22 +33,39 @@ services:
                 ipv4_address: 172.18.0.2
         security_opt:
             - apparmor=docker-default
-        mem_limit: 1024m
-        mem_reservation: 256M
-        cpus: 1   
-        # Le paramètre cpu n est pas pris en compte par docker compose il faut l entrer manuellement avec docker update --cpus 1 CONTAINER
+            
 
     web:
         build: ./web
+        deploy:
+            resources:
+                limits:
+                    cpus: '1'
+                    memory: 512M
+                    pids: 100
+                reservations:
+                    cpus: '0.25'
+                    memory: 256M
+            restart_policy:
+                condition: on-failure
+                delay: 5s
+                max_attempts: 5
         container_name: woodyweb
         ports:
           - 8080:80
+        healthcheck:
+            test: curl --fail http://localhost:80 || exit 1
+            interval: 60s
+            retries: 1
+            start_period: 20s
+            timeout: 10s
         networks:
             woodynet:
                 ipv4_address: 172.18.0.3
         security_opt:
             - apparmor=docker-httpd-restricted
-        mem_limit: 512m
-        mem_reservation: 256M
-        cpus: 1
-         
+networks:
+    woodynet:
+        external: true
+        
+            
