@@ -21,6 +21,7 @@ ReadOnlyPaths = [
 	"/tmp/**",
 	"/sys/**",
 	"/usr/**",
+	"/var/www/**",
 ]
 
 # paths where you want to log on write
@@ -48,10 +49,6 @@ DenyExec = [
 # allowed capabilities
 [Capabilities]
 Allow = [
-	"chown",
-	"dac_override",
-	"setuid",
-	"setgid",
 	"net_bind_service"
 ]
 

@@ -1,4 +1,4 @@
-version: '2'
+version: '2.2'
 
 networks:
     woodynet:
@@ -17,7 +17,11 @@ services:
             woodynet:
                 ipv4_address: 172.18.0.2
         security_opt:
-            - apparmor=docker-default 
+            - apparmor=docker-default
+        mem_limit: 1024m
+        mem_reservation: 256M
+        cpus: 1   
+        # Le paramètre cpu n est pas pris en compte par docker compose il faut l entrer manuellement avec docker update --cpus 1 CONTAINER
 
     web:
         build: ./web
@@ -28,4 +32,8 @@ services:
             woodynet:
                 ipv4_address: 172.18.0.3
         security_opt:
-            - apparmor=docker-default 
+            - apparmor=docker-httpd-restricted
+        mem_limit: 512m
+        mem_reservation: 256M
+        cpus: 1
+         
