@@ -14,11 +14,11 @@ services:
                     memory: 256M
             restart_policy:
                 condition: on-failure
-                delay: 3s
+                delay: 5s
                 max_attempts: 5
         container_name: woodysql
         healthcheck:
-            test: mysqladmin -u$MYSQL_USER -p$MYSQL_ROOT_PASSWORD status || exit 1
+            test: mysqladmin -u$MYSQL_USER -p$MYSQL_PASSWORD status || exit 1
             interval: 60s
             retries: 1 
             start_period: 20s
@@ -28,6 +28,10 @@ services:
             - MYSQL_USER=${MYSQL_USER}
             - MYSQL_PASSWORD=${MYSQL_PASSWORD}
             - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+        volumes:
+            - type: volume
+              source: woodydata
+              target: /var/lib/mysql
         networks:
             woodynet:
                 ipv4_address: 172.18.0.2
@@ -64,8 +68,13 @@ services:
                 ipv4_address: 172.18.0.3
         security_opt:
             - apparmor=docker-httpd-restricted
+
 networks:
     woodynet:
+        external: true
+
+volumes:
+    woodydata:
         external: true
         
             
