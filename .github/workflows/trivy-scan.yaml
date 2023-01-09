@@ -18,9 +18,9 @@ jobs:
             sudo apt-get install trivy  
 
       - name: Scan configuration
-        run: sudo trivy config --format sarif --output trivySecurityReport.sarif .
+        run: sudo trivy config --output trivySecurityReport.txt .
 
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v2
         with:
-          sarif_file: trivySecurityReport.sarif
+          sarif_file: trivySecurityReport.txt
