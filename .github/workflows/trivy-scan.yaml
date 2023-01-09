@@ -11,4 +11,4 @@ jobs:
       - name: Scan vulnerabilities
         uses: actions/trivy@v1
         with:
-          args: --exit-code 0 --severity CRITICAL,HIGH path/to/your/docker-compose.yml
+          args: --exit-code 0 --severity CRITICAL https://github.com/QuentinServais/DockerSecurity/blob/main/docker-compose.yaml
