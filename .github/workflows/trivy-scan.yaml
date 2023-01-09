@@ -1,0 +1,14 @@
+name: Vulnerability Scan
+
+on: [push]
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Scan vulnerabilities
+        uses: actions/trivy@v1
+        with:
+          args: --exit-code 0 --severity CRITICAL,HIGH path/to/your/docker-compose.yml
