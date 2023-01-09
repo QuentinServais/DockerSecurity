@@ -18,8 +18,9 @@ jobs:
             sudo apt-get install trivy  
 
       - name: Scan configuration
-        run: trivyfile="trivyScan$(date +"%Y-%m-%d_%H-%M").sarif"    
-             sudo trivy config --format sarif --output $trivyfile .
+        run: |
+            trivyfile="trivyScan$(date +"%Y-%m-%d_%H-%M").sarif"    
+            sudo trivy --format sarif --output $trivyfile config .
 
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v2
