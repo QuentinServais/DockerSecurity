@@ -9,18 +9,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
               
-      - name: Scan vulnerabilities
-        uses: aquasecurity/trivy-action@master
-        with:
-          scan-type: 'fs'
-          scan-ref: '.'
-          hide-progress: false
-          ignore-unfixed: true
-          format: 'sarif'
-          output: 'trivy-results.sarif'
-          severity: 'CRITICAL,HIGH'
+      - name: Install trivy
+        run: |
+            apt-get update
+            apt-get install -y apt-transport-https
+            curl -s https://packagecloud.io/install/repositories/aquasecurity/trivy/script.deb.sh | bash  
 
-      - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: 'trivy-results.sarif'  
+      - name: Scan configuration
+        run: trivy --exit-code 0 --severity CRITICAL,HIGH --config .
