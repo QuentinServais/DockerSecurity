@@ -2,9 +2,6 @@ name: Vulnerability Scan
 
 on: [push]
 
-env:
-  TRIVY_FILENAME : trivyScan$(date +"%Y-%m-%d_%H-%M").sarif
-
 jobs:
   scan:
     runs-on: ubuntu-latest
@@ -21,9 +18,9 @@ jobs:
             sudo apt-get install trivy  
 
       - name: Scan configuration
-        run: sudo trivy config --format sarif --output $TRIVY_FILENAME .
+        run: sudo trivy config --format sarif --output trivySecurityReport.sarif .
 
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v2
         with:
-          sarif_file: $TRIVY_FILENAME
+          sarif_file: trivySecurityReport.sarif
