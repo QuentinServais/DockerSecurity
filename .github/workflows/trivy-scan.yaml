@@ -9,6 +9,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: Scan vulnerabilities
-        uses: actions/trivy@v1
+        uses: actions/aquasecurity/trivy-action
         with:
           args: --exit-code 0 --severity CRITICAL https://github.com/QuentinServais/DockerSecurity/blob/main/docker-compose.yaml
