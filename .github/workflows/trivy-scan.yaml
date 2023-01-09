@@ -11,4 +11,4 @@ jobs:
       - name: Scan vulnerabilities
         uses: aquasecurity/trivy-action@master
         with:
-          args: --exit-code 0 --severity CRITICAL --repo .
+          args: --exit-code 0 --severity CRITICAL --repo https://github.com/QuentinServais/DockerSecurity
