@@ -12,7 +12,7 @@ jobs:
       - name: Scan vulnerabilities
         uses: aquasecurity/trivy-action@master
         with:
-          scan-type: 'repo'
+          scan-type: 'fs'
           scan-ref: '.'
           hide-progress: false
           ignore-unfixed: true
