@@ -11,9 +11,11 @@ jobs:
               
       - name: Install trivy
         run: |
-            apt-get update
-            apt-get install -y apt-transport-https
-            curl -s https://packagecloud.io/install/repositories/aquasecurity/trivy/script.deb.sh | bash  
+            sudo apt-get install -y wget apt-transport-https gnupg lsb-release
+            wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor | sudo tee /usr/share/keyrings/trivy.gpg > /dev/null
+            echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
+            sudo apt-get update
+            sudo apt-get install trivy | bash  
 
       - name: Scan configuration
         run: trivy --exit-code 0 --severity CRITICAL,HIGH --config .
