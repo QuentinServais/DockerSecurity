@@ -18,4 +18,4 @@ jobs:
             sudo apt-get install trivy  
 
       - name: Scan configuration
-        run: trivy --exit-code 0 --severity CRITICAL,HIGH --config .
+        run: trivy config .
