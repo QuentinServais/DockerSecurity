@@ -8,11 +8,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-
+              
       - name: Scan vulnerabilities
         uses: aquasecurity/trivy-action@master
         with:
-          scan-type: 'config'
+          scan-type: 'repo'
+          scan-ref: '.'
           hide-progress: false
           ignore-unfixed: true
           format: 'sarif'
