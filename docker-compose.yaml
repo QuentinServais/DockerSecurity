@@ -85,6 +85,9 @@ services:
         ports:
             - "24224:24224"
             - "24224:24224/udp"
+        networks:
+            woodynet:
+                ipv4_address: 172.18.0.4
     
     
     elasticsearch:
@@ -96,13 +99,19 @@ services:
             - "9200"
         ports: 
             - "9200:9200"
+        networks:
+            woodynet:
+                ipv4_address: 172.18.0.5
 
     kibana:
         image: docker.elastic.co/kibana/kibana:7.13.1
         links:
             - "elasticsearch"
         ports:
-            - "5601:5601" 
+            - "5601:5601"
+        networks:
+            woodynet:
+                ipv4_address: 172.18.0.6 
 
 
 networks:
