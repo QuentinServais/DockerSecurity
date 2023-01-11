@@ -109,7 +109,9 @@ services:
         ports: 
             - "9200:9200"
         volumes:
-            - elasticsearch-data:/usr/share/elasticsearch/data
+            - type: volume
+              source: elasticsearch_data
+              target: /usr/share/elasticsearch/data
         networks:
             woodynet:
                 ipv4_address: 172.18.0.5
