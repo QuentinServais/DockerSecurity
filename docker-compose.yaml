@@ -77,7 +77,7 @@ services:
         - GF_SECURITY_ADMIN_USER=admin
         - GF_SECURITY_ADMIN_PASSWORD=password
         volumes:
-        - grafana-data:/var/lib/grafana
+        - /home/quentin/docker_volumes/grafana:/var/lib/grafana
         networks:
             woodynet:
                 ipv4_address: 172.18.0.4
@@ -88,7 +88,7 @@ services:
         - 3100:3100
         command: -config.file=/etc/loki/loki-config.yml
         volumes:
-        - loki-data:/data
+            - /home/quentin/docker_volumes/loki:/etc/loki
         networks:
             woodynet:
                 ipv4_address: 172.18.0.5
@@ -99,7 +99,7 @@ services:
         - 3101:3101
         volumes:
         - /var/log:/var/log
-        - promtail-data:/data
+        - /home/quentin/docker_volumes/promtail:/etc/promtail
         command: -config.file=/etc/promtail/promtail-config.yml
         networks:
             woodynet:
