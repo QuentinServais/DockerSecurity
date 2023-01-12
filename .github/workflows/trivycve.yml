@@ -2,9 +2,10 @@ name: CVE Image Scan
 
 on: [push]
 
-jobs:  
+jobs:
   scan:
-    name: Build
+    if: contains(github.event.head_commit.message, 'scan')
+    name: CVE 
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -23,9 +24,30 @@ jobs:
             sudo apt-get install trivy
         
       - name: Scan CVE
-        run: sudo trivy image --format sarif --output trivy-CVE-web.sarif web:${{ github.sha }}
+        run: sudo trivy image --format sarif --output trivy-CVE-web.sarif --severity HIGH,CRITICAL web:${{ github.sha }}
 
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: 'trivy-CVE-web.sarif'
+        
+      - name: Build the database image from Dockerfile
+        run: |
+          docker build ./database -t db:${{ github.sha }}
+
+      - name: Install trivy
+        run: |
+            sudo apt-get install -y wget apt-transport-https gnupg lsb-release
+            wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor | sudo tee /usr/share/keyrings/trivy.gpg > /dev/null
+            echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
+            sudo apt-get update
+            sudo apt-get install trivy
+        
+      - name: Scan CVE
+        run: sudo trivy image --format sarif --output trivy-CVE-db.sarif --severity HIGH,CRITICAL db:${{ github.sha }}
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy-CVE-db.sarif'
+
