@@ -5,13 +5,14 @@ on: [push]
 jobs:  
   scan:
     name: Build
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Build the web image from Dockerfile
-        run: docker build -t web:${{ github.sha }} -f web/ .
+        run: |
+          docker build ./web -t web:${{ github.sha }}
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
