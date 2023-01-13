@@ -110,9 +110,6 @@ networks:
 
 volumes:
     woodydata:
-    grafana-data:
-    loki-data:
-    promtail-data:
     
         
             
