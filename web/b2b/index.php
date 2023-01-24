@@ -1,6 +1,8 @@
 <?php
-try { 
-    $objetPdo = new PDO('mysql:host=172.18.0.2;dbname=woody;charset=utf8', 'quentin', 'root');
+try {
+    $username = getenv('MYSQL_USER');
+    $password = getenv('MYSQL_PASSWORD');
+    $objetPdo = new PDO('mysql:host=172.18.1.2;dbname=woody;charset=utf8', $username, $password);
     echo "connect OK";
     $pdoStat = $objetPdo->prepare('SELECT * FROM clients');
     $request = $pdoStat->execute();
